@@ -1,5 +1,6 @@
 package com.example.davidcocom.noestructuradosapp;
 
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -7,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -113,69 +115,36 @@ public class UserInfo extends AppCompatActivity
         mListView.getAdapter().add(card);
     }
 
-    private void addNewCard(String championName, String championDesc, String content) {
+    private void addNewCard(final String championName, String championDesc, String content) {
         URL url = null;
         Card card = null;
         try {
-            url = new URL("http://ddragon.leagueoflegends.com/cdn/6.9.1/img/champion/" +
+            url = new URL("http://ddragon.leagueoflegends.com/cdn/img/champion/splash/" +
                     championName +
-                    ".png");
-            /*card2 = new Card.Builder(this)
+                    "_0.jpg");
+
+            card = new Card.Builder(this)
                     .withProvider(new CardProvider())
                     .setLayout(R.layout.material_image_with_buttons_card)
-                    .setTitle("Card number 5")
-                    .setDescription("Lorem ipsum dolor sit amet")
+                    .setTitle(championName)
+                    .setTitleColor(Color.WHITE)
+                    .setSubtitle(championDesc)
+                    .setDescription(content)
                     .setDrawable(new ChampionImage().execute(url).get())
                     .addAction(R.id.left_text_button, new TextViewAction(this)
-                            .setText("Izquierda")
+                            .setText("Ver Información")
                             .setTextResourceColor(R.color.black_button)
                             .setListener(new OnActionClickListener() {
                                 @Override
                                 public void onActionClicked(View view, Card card) {
                                     Log.d("ADDING", "CARD");
-                                    Toast.makeText(getApplicationContext(), "Added new card", Toast.LENGTH_SHORT).show();
-                                }
-                            }))
-                    .addAction(R.id.right_text_button, new TextViewAction(this)
-                            .setText("Derecha")
-                            .setTextResourceColor(R.color.accent_material_dark)
-                            .setListener(new OnActionClickListener() {
-                                @Override
-                                public void onActionClicked(View view, Card card) {
-                                    Toast.makeText(getApplicationContext(), "You have pressed the right button", Toast.LENGTH_SHORT).show();
-                                }
-                            }))
-                    .endConfig()
-                    .build();*/
 
-            card = new Card.Builder(this)
-                    .withProvider(new CardProvider())
-                    .setLayout(R.layout.material_basic_image_buttons_card_layout)
-                    .setTitle(championName)
-                    .setTitleGravity(Gravity.START)
-                    .setSubtitle(championDesc)
-                    .setSubtitleColor(Color.BLACK)
-                    .setDescription(content)
-                    .setDescriptionGravity(Gravity.START)
-                    .setDrawable(new ChampionImage().execute(url).get())
-                    .setDrawableConfiguration(new CardProvider.OnImageConfigListener() {
-                        @Override
-                        public void onImageConfigure(@NonNull RequestCreator requestCreator) {
-                            requestCreator.fit();
-                        }
-                    })
-                    .addAction(R.id.left_text_button, new TextViewAction(this)
-                            .setText("Izquierda")
-                            .setTextResourceColor(R.color.black_button)
-                            .setListener(new OnActionClickListener() {
-                                @Override
-                                public void onActionClicked(View view, Card card) {
-                                    Toast.makeText(getApplicationContext(), "You have pressed the left button", Toast.LENGTH_SHORT).show();
-                                    card.getProvider().setTitle("CHANGED ON RUNTIME");
                                 }
                             }))
+
                     .endConfig()
                     .build();
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
