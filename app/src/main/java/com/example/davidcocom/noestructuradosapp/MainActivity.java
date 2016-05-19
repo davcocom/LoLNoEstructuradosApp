@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void openNewActivity(View view) {
         if (isStatusValid(view)) {
-            Intent championList = new Intent(this, UserInfo.class);
+            Intent championList = new Intent(this, ChampionsList.class);
             championList.putExtra("id", getIdFromJSON(getJSON(getCompleteUrl())));
             championList.putExtra("region", spinner.getSelectedItem().toString());
             startActivity(championList);
