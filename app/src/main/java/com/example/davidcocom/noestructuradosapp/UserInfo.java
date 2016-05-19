@@ -188,9 +188,9 @@ public class UserInfo extends AppCompatActivity
             JSONArray champions = jsonObject.getJSONArray("champions");
 
             // obtener tamaño y en base a eso un for para obtener los más jugados
-            int numeroCampeonesJugados = champions.length() - 1;
+            int numeroCampeonesJugados = champions.length();
             int[] numerosPartidasTotales = new int[numeroCampeonesJugados];
-            int[] top5ChampionIds = new int[5];
+            int[] top5ChampionIds = new int[6];
             for (int i = 0; i < numeroCampeonesJugados; i++) {
                 JSONObject stats = champions.getJSONObject(i).getJSONObject("stats");
                 String championId = champions.getJSONObject(i).getString("id");
@@ -198,7 +198,7 @@ public class UserInfo extends AppCompatActivity
             }
             // hay que ordenar numeroPartidasTotales[]
             int max = 0, index;
-            for (int j = 0; j < 5; j++){
+            for (int j = 0; j < 6; j++){
                 max = numerosPartidasTotales[0];
                 index = 0;
                 for (int i = 1; i < numerosPartidasTotales.length; i++) {
@@ -208,14 +208,14 @@ public class UserInfo extends AppCompatActivity
                     }
                 }
                 top5ChampionIds[j] = index; // <----
-                Log.d("idcampeones", String.valueOf(index));
+                // Log.d("idcampeones", String.valueOf(index));
                 numerosPartidasTotales[index] = Integer.MIN_VALUE;
             }
 
             for (int i = 0; i < 5; i++) {
                 String cardContent = "";
-                JSONObject stats = champions.getJSONObject(top5ChampionIds[i]).getJSONObject("stats");
-                String championId = champions.getJSONObject(top5ChampionIds[i]).getString("id");
+                JSONObject stats = champions.getJSONObject(top5ChampionIds[i+1]).getJSONObject("stats");
+                String championId = champions.getJSONObject(top5ChampionIds[i+1]).getString("id");
                 String[] championData = getChampionData(championId);
                 cardContent = "Juegos realizados: " + stats.get("totalSessionsPlayed").toString() +
                         "\n" + "Ganadas: " + stats.get("totalSessionsWon").toString() +
