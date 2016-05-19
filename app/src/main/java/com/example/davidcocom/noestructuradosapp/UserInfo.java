@@ -188,10 +188,35 @@ public class UserInfo extends AppCompatActivity
             JSONObject jsonObject = new JSONObject(content);
             JSONArray champions = jsonObject.getJSONArray("champions");
 
-            for (int i = 0; i < 5; i++) {
-                String cardContent = "";
+            // obtener tamaño y en base a eso un for para obtener los más jugados
+            int numeroCampeonesJugados = champions.length();
+            int[] numerosPartidasTotales = new int[numeroCampeonesJugados];
+            int[] top5ChampionIds = new int[6];
+            for (int i = 0; i < numeroCampeonesJugados; i++) {
                 JSONObject stats = champions.getJSONObject(i).getJSONObject("stats");
                 String championId = champions.getJSONObject(i).getString("id");
+                numerosPartidasTotales[i] = (int) stats.get("totalSessionsPlayed");
+            }
+            // hay que ordenar numeroPartidasTotales[]
+            int max = 0, index;
+            for (int j = 0; j < 6; j++){
+                max = numerosPartidasTotales[0];
+                index = 0;
+                for (int i = 1; i < numerosPartidasTotales.length; i++) {
+                    if (max < numerosPartidasTotales[i]) {
+                        max = numerosPartidasTotales[i];
+                        index = i;
+                    }
+                }
+                top5ChampionIds[j] = index; // <----
+                // Log.d("idcampeones", String.valueOf(index));
+                numerosPartidasTotales[index] = Integer.MIN_VALUE;
+            }
+
+            for (int i = 0; i < 5; i++) {
+                String cardContent = "";
+                JSONObject stats = champions.getJSONObject(top5ChampionIds[i+1]).getJSONObject("stats");
+                String championId = champions.getJSONObject(top5ChampionIds[i+1]).getString("id");
                 String[] championData = getChampionData(championId);
                 cardContent = "Juegos realizados: " + stats.get("totalSessionsPlayed").toString() +
                         "\n" + "Ganadas: " + stats.get("totalSessionsWon").toString() +
@@ -227,8 +252,6 @@ public class UserInfo extends AppCompatActivity
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
         return championData;
     }
 
