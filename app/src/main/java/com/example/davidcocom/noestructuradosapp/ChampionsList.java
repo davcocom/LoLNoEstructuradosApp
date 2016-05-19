@@ -166,7 +166,21 @@ public class ChampionsList extends AppCompatActivity {
             // obtener tamaño y en base a eso un for para obtener los más jugados
             int numeroCampeonesJugados = champions.length();
             int[] numerosPartidasTotales = new int[numeroCampeonesJugados];
-            int[] top5ChampionIds = new int[6];
+            int campeonesVerdaderosPorMostrar = 0;
+            int campeonesPorOrdenar = 0;
+            int[] topChampionIds;
+
+            // si tiene al menos 5 aparte del champion_id=0
+            if(numeroCampeonesJugados > 5){
+                campeonesVerdaderosPorMostrar = 5;
+                campeonesPorOrdenar = 6;
+                topChampionIds = new int[campeonesVerdaderosPorMostrar + 1];
+            } else {
+                campeonesVerdaderosPorMostrar = numeroCampeonesJugados - 1;
+                campeonesPorOrdenar = numeroCampeonesJugados;
+                topChampionIds = new int[numeroCampeonesJugados];
+            }
+
             for (int i = 0; i < numeroCampeonesJugados; i++) {
                 JSONObject stats = champions.getJSONObject(i).getJSONObject("stats");
                 String championId = champions.getJSONObject(i).getString("id");
@@ -174,7 +188,8 @@ public class ChampionsList extends AppCompatActivity {
             }
             // hay que ordenar numeroPartidasTotales[]
             int max = 0, index;
-            for (int j = 0; j < 6; j++) {
+
+            for (int j = 0; j < campeonesPorOrdenar; j++){
                 max = numerosPartidasTotales[0];
                 index = 0;
                 for (int i = 1; i < numerosPartidasTotales.length; i++) {
@@ -183,15 +198,15 @@ public class ChampionsList extends AppCompatActivity {
                         index = i;
                     }
                 }
-                top5ChampionIds[j] = index; // <----
-                // Log.d("idcampeones", String.valueOf(index));
+                topChampionIds[j] = index; // <----
+                Log.d("idcampeones", String.valueOf(index));
                 numerosPartidasTotales[index] = Integer.MIN_VALUE;
             }
 
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < campeonesVerdaderosPorMostrar; i++) {
                 String cardContent = "";
-                JSONObject stats = champions.getJSONObject(top5ChampionIds[i + 1]).getJSONObject("stats");
-                String championId = champions.getJSONObject(top5ChampionIds[i + 1]).getString("id");
+                JSONObject stats = champions.getJSONObject(topChampionIds[i+1]).getJSONObject("stats");
+                String championId = champions.getJSONObject(topChampionIds[i+1]).getString("id");
                 String[] championData = getChampionData(championId);
                 cardContent = "Juegos realizados: " + stats.get("totalSessionsPlayed").toString() +
                         "\n" + "Ganadas: " + stats.get("totalSessionsWon").toString() +
