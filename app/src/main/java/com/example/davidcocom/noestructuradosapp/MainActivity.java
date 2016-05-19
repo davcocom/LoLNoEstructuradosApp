@@ -124,7 +124,6 @@ public class MainActivity extends AppCompatActivity {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        Log.d("json",response);
         return response;
     }
 
@@ -137,6 +136,8 @@ public class MainActivity extends AppCompatActivity {
             id = json.getJSONObject(gamerTag).get("id").toString();
         } catch (JSONException e) {
             Toast.makeText(MainActivity.this, "Usuario no válido", Toast.LENGTH_SHORT).show();
+        } catch (NullPointerException e){
+            Toast.makeText(MainActivity.this, "No existe tal usuario", Toast.LENGTH_SHORT).show();
         }
         return id;
     }
