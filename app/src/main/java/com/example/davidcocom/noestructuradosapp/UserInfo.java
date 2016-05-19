@@ -164,7 +164,8 @@ public class UserInfo extends AppCompatActivity
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
-            e.printStackTrace();
+            this.finish();
+            Toast.makeText(UserInfo.this, "No existe información para ese usuario", Toast.LENGTH_SHORT).show();
         }
         return data;
     }
@@ -200,7 +201,12 @@ public class UserInfo extends AppCompatActivity
 
         } catch (JSONException e) {
             e.printStackTrace();
-            Toast.makeText(UserInfo.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        } catch (NullPointerException e) {
+            this.finish();
+            e.printStackTrace();
+            Toast.makeText(UserInfo.this,
+                    "No se encontraron partidas clasificatorias de este jugador",
+                    Toast.LENGTH_SHORT).show();
         }
     }
 

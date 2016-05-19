@@ -9,11 +9,15 @@ import android.os.SystemClock;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.rey.material.widget.EditText;
 import com.rey.material.widget.ProgressView;
 import com.rey.material.widget.Spinner;
 
@@ -54,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     public void openNewActivity(View view) {
         if (isStatusValid(view)) {
             Intent championList = new Intent(this, UserInfo.class);
-            championList.putExtra("id",getIdFromJSON(getJSON(getCompleteUrl())));
+            championList.putExtra("id", getIdFromJSON(getJSON(getCompleteUrl())));
             championList.putExtra("region", spinner.getSelectedItem().toString());
             startActivity(championList);
         }
@@ -74,7 +78,8 @@ public class MainActivity extends AppCompatActivity {
 
     private String getCompleteUrl() {
         String region = spinner.getSelectedItem().toString();
-        String gamerTag = this.gamerTag.getText().toString();
+        String gamerTag = (this.gamerTag.getText().toString());
+
         String url = "https://" +
                 region
                 + ".api.pvp.net/api/lol/" +
@@ -83,7 +88,8 @@ public class MainActivity extends AppCompatActivity {
                 gamerTag
                 + "?api_key=" +
                 API_KEY;
-        return url;
+
+        return replaceSpaces(url);
     }
 
     private void setupSpinner() {
@@ -118,21 +124,27 @@ public class MainActivity extends AppCompatActivity {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+        Log.d("json",response);
         return response;
     }
 
-    private String getIdFromJSON(String data){
+    private String getIdFromJSON(String data) {
         JSONObject json = null;
         String id = "";
-        String gamerTag = this.gamerTag.getText().toString().toLowerCase();
+        String gamerTag = this.gamerTag.getText().toString().toLowerCase().replace(" ","");
         try {
             json = new JSONObject(data);
             id = json.getJSONObject(gamerTag).get("id").toString();
         } catch (JSONException e) {
-            e.printStackTrace();
-            Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Usuario no válido", Toast.LENGTH_SHORT).show();
         }
         return id;
+    }
+
+    public String replaceSpaces(String string){
+        string = string.replace(" ", "%20");
+        Log.d("tagname",string);
+        return string;
     }
 
     private void showDialog(String data) {
@@ -157,9 +169,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    class GetJson extends AsyncTask<String, Integer, String>{
+    class GetJson extends AsyncTask<String, Integer, String> {
 
         int myProgress;
+
         @Override
         protected String doInBackground(String... params) {
             String json = getJSON(params[0]);
@@ -180,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
                 StringBuffer buffer = new StringBuffer();
 
                 String line = "";
-                while ((line = reader.readLine())!= null){
+                while ((line = reader.readLine()) != null) {
                     buffer.append(line);
                 }
 
@@ -192,10 +205,10 @@ public class MainActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
-                if (connection != null){
+                if (connection != null) {
                     connection.disconnect();
                 }
-                if (reader!= null){
+                if (reader != null) {
                     try {
                         reader.close();
                     } catch (IOException e) {

@@ -40,6 +40,7 @@
         android:layout_marginRight="20dp"
         android:layout_toStartOf="@+id/spinner_regions"
         android:background="@color/colorBackgroundLight"
+        android:imeOptions="actionNext"
         android:padding="10dp"
         android:textAlignment="center"
         android:textColor="@color/material_grey_50" />
