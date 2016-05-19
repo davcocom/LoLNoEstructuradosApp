@@ -1,21 +1,13 @@
 package com.example.davidcocom.noestructuradosapp;
 
-import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -33,9 +25,7 @@ import com.dexafree.materialList.card.OnActionClickListener;
 import com.dexafree.materialList.card.action.TextViewAction;
 import com.dexafree.materialList.card.action.WelcomeButtonAction;
 import com.dexafree.materialList.view.MaterialListView;
-import com.ramotion.foldingcell.FoldingCell;
 import com.rey.material.widget.ProgressView;
-import com.squareup.picasso.RequestCreator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,7 +33,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.ExecutionException;
@@ -84,7 +73,7 @@ public class UserInfo extends AppCompatActivity
         loadingCards = (ProgressView) findViewById(R.id.progress_view_cards);
 
         setupCards();
-        analizeJSON(getJSONContent(getUrlRequest()));
+        analyzeJSON(getJSONContent(getUrlRequest()));
     }
 
     private void setupCards() {
@@ -183,7 +172,7 @@ public class UserInfo extends AppCompatActivity
         return url;
     }
 
-    private void analizeJSON(String content) {
+    private void analyzeJSON(String content) {
         try {
             JSONObject jsonObject = new JSONObject(content);
             JSONArray champions = jsonObject.getJSONArray("champions");
@@ -223,7 +212,7 @@ public class UserInfo extends AppCompatActivity
                         "\n" + "Perdidas: " + stats.get("totalSessionsLost").toString();
                 addNewCard(championData[0], championData[1].toUpperCase(), cardContent);
             }
-
+            mListView.smoothScrollToPosition(0);
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (NullPointerException e) {
