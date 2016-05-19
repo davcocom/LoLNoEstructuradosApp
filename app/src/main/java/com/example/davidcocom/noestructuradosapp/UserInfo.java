@@ -187,6 +187,41 @@ public class UserInfo extends AppCompatActivity
             JSONObject jsonObject = new JSONObject(content);
             JSONArray champions = jsonObject.getJSONArray("champions");
 
+            // obtener tamaño y en base a eso un for para obtener los más jugados
+            int numeroCampeonesJugados = champions.length();
+            int[] numerosPartidasTotales = new int[numeroCampeonesJugados];
+            int[] top5 = new int[5];
+            for (int i = 0; i < numeroCampeonesJugados; i++){
+                JSONObject stats = champions.getJSONObject(i).getJSONObject("stats");
+                String championId = champions.getJSONObject(i).getString("id");
+                numerosPartidasTotales[i] = (int) stats.get("totalSessionsPlayed");
+            }
+            int max = 0, index;
+            for (int j = 0; j < 5; j++){
+                max = numerosPartidasTotales[0];
+                index = 0;
+                for (int i = 1; i < numeroCampeonesJugados; i++){
+                    if (max < numerosPartidasTotales[i]){
+                        max = numerosPartidasTotales[i];
+                        index = i;
+                    }
+                }
+                top5[j] = index;
+                numerosPartidasTotales[index] = Integer.MIN_VALUE;
+            }
+
+            for (int i = 0; i < 5; i++) {
+                String cardContent = "";
+                JSONObject stats = champions.getJSONObject(i).getJSONObject("stats");
+                String championId = String.valueOf(top5[i]);
+                String[] championData = getChampionData(championId);
+                cardContent = "Juegos realizados: " + stats.get("totalSessionsPlayed").toString() +
+                        "\n" + "Ganadas: " + stats.get("totalSessionsWon").toString() +
+                        "\n" + "Perdidas: " + stats.get("totalSessionsLost").toString();
+                addNewCard(championData[0], championData[1].toUpperCase(), cardContent);
+            }
+
+            /*
             for (int i = 0; i < 5; i++) {
                 String cardContent = "";
                 JSONObject stats = champions.getJSONObject(i).getJSONObject("stats");
@@ -197,6 +232,7 @@ public class UserInfo extends AppCompatActivity
                         "\n" + "Perdidas: " + stats.get("totalSessionsLost").toString();
                 addNewCard(championData[0], championData[1].toUpperCase(), cardContent);
             }
+            */
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -221,8 +257,6 @@ public class UserInfo extends AppCompatActivity
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
         return championData;
     }
 
